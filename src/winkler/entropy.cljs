@@ -1,6 +1,5 @@
 (ns winkler.entropy
-  (:require [clojure.core.async :refer [go go-loop >! <! chan] :as a]
-            [winkler.utils :refer [floor log2 abs] :as u]))
+  (:require [winkler.utils :refer [floor log log2 sqrt abs sin rrest] :as u]))
 
 (def default-opts {:lazy-loop-delay 30
                     :loop-delay 5
@@ -16,24 +15,7 @@
       i
       (recur start
              (inc i)
-             (-> (+ i x) (js/Math.log) (js/Math.sqrt) (js/Math.sin))))))
-
-; timer_race_loop: ->
-;     @_last_count = null
-;     while @running
-;       if @count_unused_bits() < @auto_stop_bits
-;         count = @millisecond_count()
-;         if @_last_count? and (delta = count - @_last_count)
-;           entropy = Math.max 0, (Math.floor(@log_2 Math.abs delta) - 1)
-;           entropy = Math.min @max_bits_per_delta, entropy
-;           v       = [delta, entropy]
-;           @entropies.push v
-;         @_last_count = count
-;       await @delay defer()
-
-; (defn gen-entropies [entropies]
-;   (go-loop [last nil]
-;     ))
+             (-> (+ i x) log sqrt sin)))))
 
 (defn calc-entropy
   "Calculates bits of entropy given a delta value.  Takes a numerical delta value and a max-bit amount."
@@ -44,9 +26,33 @@
        (max 0)
        (min max-bits))))
 
-(defn generate [bits]
-  (let [entropies (chan 128)]))
+(defn collect-entropy
+  "Returns a lazy-seq of generated entropy data. Each is a 3-tuple consisting of [delta value entropy]"
+  []
+  (rrest
+   (iterate
+    (fn [[_ last-val _]]
+      (let [value (ms-count 1)
+            delta (- value last-val)
+            entropy (calc-entropy delta)]
+        [delta value entropy]))
+    [nil nil nil])))
+
+(defn generate
+  "Returns a sequence of integers"
+  [bit-limit]
+  (->> (collect-entropy)
+       (reductions (fn [[_ harvested] [delta _ entropy]]
+                     [delta (+ harvested entropy)])
+                   [0 0])
+       (take-while (fn [[_ harvested]] (>= bit-limit harvested)))
+       (map first)
+       (rest)))
 
 (comment
-  (calc-entropy 929823 100000))
-
+  (take 4 (collect-entropy))
+  (let [xs (generate 100)]
+    (->> xs
+         (partition 2 1)
+         (map #(calc-entropy (- (last %) (first %))))
+         (reduce +))))
