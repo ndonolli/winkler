@@ -1,6 +1,7 @@
 (ns winkler.test
   (:require [cljs.test :refer [is deftest testing]]
-            [winkler.entropy :refer [generate calc-entropy]]))
+            [winkler.core :refer [generate]]
+            [winkler.entropy :refer [calc-entropy]]))
 
 (deftest generate-test
   (testing "integer sequence contains total entropy of at least provided bit-limit"

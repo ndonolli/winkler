@@ -1,6 +1,7 @@
 node_modules/
 public/
 public/js
+dist/
 
 /target
 /checkouts
