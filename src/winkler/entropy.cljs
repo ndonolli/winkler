@@ -26,7 +26,7 @@
        (min max-bits))))
 
 (defn collect-entropy
-  "Returns a lazy-seq of generated entropy data. Each is a 3-tuple consisting of [delta value entropy]"
+  "Returns a lazy-seq of generated entropy data. Each element is a 3-tuple consisting of [delta value entropy]"
   ([] (collect-entropy (:max-bits DEFAULT)))
   ([max-bits]
    (rrest
