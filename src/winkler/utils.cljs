@@ -1,5 +1,6 @@
 (ns winkler.utils)
 
+;; JS Interop helpers
 (defn abs
   "Math.abs wrapper"
   [x] (js/Math.abs x))
@@ -24,6 +25,7 @@
   "Division of Math.log(x) / Math.LN2"
   [x] (/ (log x) (.-LN2 js/Math)))
 
+;; General Utilities
 (defn rrest
-  "Rest of rest"
+  "Calls (rest ..) twice on a sequence"
   [s] (rest (rest s)))

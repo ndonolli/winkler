@@ -1,10 +1,12 @@
 ;; shadow-cljs configuration
-{:source-paths
- ["src"]
+{:source-paths ["src"]
 
  :dependencies [[org.clojure/core.async "1.3.610"]]
 
- :builds
- {:app {:target :browser
-        :output-dir "public/js/"
-        :modules {:main {:entries [winkler.core]}}}}}
+ :builds {:app {:target :browser
+                :output-dir "public/js/"
+                :modules {:main {:entries [winkler.core]}}}
+          :test {:target :node-test
+                 :autorun true
+                 :ns-regexp "test$"
+                 :output-to "public/js/test.js"}}}

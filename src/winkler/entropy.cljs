@@ -1,9 +1,8 @@
 (ns winkler.entropy
   (:require [winkler.utils :refer [floor log log2 sqrt abs sin rrest] :as u]))
 
-(def default-opts {:lazy-loop-delay 30
-                    :loop-delay 5
-                    :work-min 1})
+(defonce DEFAULT {:max-bits 4
+                  :bit-limit 100})
 
 (defn ms-count
   "Returns the number of floating point operations executed in the time limit provided in the argument (in ms)."
@@ -19,7 +18,7 @@
 
 (defn calc-entropy
   "Calculates bits of entropy given a delta value.  Takes a numerical delta value and a max-bit amount."
-  ([delta] (calc-entropy delta 4))
+  ([delta] (calc-entropy delta (:max-bits DEFAULT)))
   ([delta max-bits]
    (-> (log2 (abs delta))
        (dec) (floor)
@@ -28,31 +27,25 @@
 
 (defn collect-entropy
   "Returns a lazy-seq of generated entropy data. Each is a 3-tuple consisting of [delta value entropy]"
-  []
-  (rrest
-   (iterate
-    (fn [[_ last-val _]]
-      (let [value (ms-count 1)
-            delta (- value last-val)
-            entropy (calc-entropy delta)]
-        [delta value entropy]))
-    [nil nil nil])))
+  ([] (collect-entropy (:max-bits DEFAULT)))
+  ([max-bits]
+   (identity
+    (iterate
+     (fn [[_ last-val _]]
+       (let [value (ms-count 1)
+             delta (- value last-val)
+             entropy (calc-entropy delta max-bits)]
+         [delta value entropy]))
+     [nil nil nil]))))
 
 (defn generate
-  "Returns a sequence of integers"
-  [bit-limit]
-  (->> (collect-entropy)
-       (reductions (fn [[_ harvested] [delta _ entropy]]
-                     [delta (+ harvested entropy)])
-                   [0 0])
-       (take-while (fn [[_ harvested]] (>= bit-limit harvested)))
-       (map first)
-       (rest)))
-
-(comment
-  (take 4 (collect-entropy))
-  (let [xs (generate 100)]
-    (->> xs
-         (partition 2 1)
-         (map #(calc-entropy (- (last %) (first %))))
-         (reduce +))))
+  "Returns a sequence of integers with at least n bits of entropy, as provided by the bit-limit. Takes an optional argument for a max-bit per delta in the sequnce. Defaults to 4"
+  ([bit-limit] (generate bit-limit (:max-bits DEFAULT)))
+  ([bit-limit max-bits]
+   (->> (collect-entropy max-bits)
+        (reductions (fn [[_ harvested] [delta _ entropy]]
+                      [delta (+ harvested entropy)])
+                    [0 0])
+        (take-while (fn [[_ harvested]] (>= (+ bit-limit max-bits) harvested)))
+        (map first)
+        (rest))))
