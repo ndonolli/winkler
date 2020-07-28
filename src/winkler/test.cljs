@@ -1,5 +1,5 @@
 (ns winkler.test
-  (:require [cljs.test :refer [are is deftest testing]]
+  (:require [cljs.test :refer [is deftest testing]]
             [winkler.entropy :refer [generate calc-entropy]]))
 
 (deftest generate-test

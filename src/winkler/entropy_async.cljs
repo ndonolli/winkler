@@ -10,12 +10,5 @@
            delta (- count last-count)]
        (if last-count
          (>! entropies [delta (calc-entropy delta)]))
-       (recur count)))))
-
-
-;; (defn generate [bit-limit]
-;;   (let [entropies (chan 128)]
-;;     (collect-entropy! entropies)
-;;     (go-loop [entropy (<! entropies)
-;;               bits 0]
-;;       ())))
+       (recur count)))
+   entropies))
