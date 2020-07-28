@@ -8,7 +8,9 @@ As of now, you must build from source and include manually with other projects. 
 
 To begin, run this command:
 
-`git clone https://github.com/ndonolli/winkler.git`
+```
+git clone https://github.com/ndonolli/winkler.git
+```
 
 
 There is one function in the core library named `generate` which will produce a lazy-seq of randomized integers. The sequence will produce until the total bits of entropy is greater than the provided argument amount.
