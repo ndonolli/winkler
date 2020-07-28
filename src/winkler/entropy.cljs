@@ -29,7 +29,7 @@
   "Returns a lazy-seq of generated entropy data. Each is a 3-tuple consisting of [delta value entropy]"
   ([] (collect-entropy (:max-bits DEFAULT)))
   ([max-bits]
-   (identity
+   (rrest
     (iterate
      (fn [[_ last-val _]]
        (let [value (ms-count 1)
@@ -46,6 +46,7 @@
         (reductions (fn [[_ harvested] [delta _ entropy]]
                       [delta (+ harvested entropy)])
                     [0 0])
-        (take-while (fn [[_ harvested]] (>= (+ bit-limit max-bits) harvested)))
+        (take-while (fn [[_ harvested]]
+                      (>= (+ bit-limit (* 2 max-bits)) harvested)))
         (map first)
         (rest))))
