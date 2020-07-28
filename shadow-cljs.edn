@@ -6,6 +6,7 @@
  :builds {:app {:target :browser
                 :output-dir "public/js/"
                 :modules {:main {:entries [winkler.core]}}}
+
           :test {:target :node-test
                  :autorun true
                  :ns-regexp "test$"
