@@ -44,6 +44,11 @@ Longer answer: This, combined with more cryptographically secure algorithms prov
 
 Disclaimer: I am nowhere near an expert in this field.
 
+## Roadmap
+
+1. Develop "non-blocking" versions of the generator using `core.async`. The core generator is fine for most use-cases (and lazy!) but an async version would suit for longer sequences.
+2. (Maybe?) Build and publish this library on npm to allow integration with other JS projects. Shadow-cljs provides great tools on this front, however some work is needed as this is still a purely clojurescript project. 
+
 ## Licence
 
 winkler is [MIT licenced](license.txt)
