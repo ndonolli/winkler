@@ -1,4 +1,5 @@
 # winkler
+[![Clojars Project](https://img.shields.io/clojars/v/imaginathansoft/winkler.svg)](https://clojars.org/imaginathansoft/winkler)
 
 A moderately paranoid clojurescript library for generating more entropy. You may need a cryptographically secure RNG but who knows if it's enough.  This is just some extra salt.
 
@@ -6,12 +7,12 @@ A moderately paranoid clojurescript library for generating more entropy. You may
 
 With Leinengen/Boot:
 ```
-[imaginathansoft/winkler "0.1.0"]
+[imaginathansoft/winkler "0.1.1"]
 ```
 
 With deps.edn:
 ```
-imaginathansoft/winkler {:mvn/version "0.1.0"}
+imaginathansoft/winkler {:mvn/version "0.1.1"}
 ```
 
 To build from source, run in the terminal:
