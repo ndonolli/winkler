@@ -49,7 +49,7 @@ Disclaimer: I am nowhere near an expert in this field.
 
 ## Contributing
 
-Open an issue, talk it out, open a pull request, and bear the fruits of your labor. This is not my code. It is *our* code, comerade.
+Open an issue, talk it out, open a pull request, and bear the fruits of your labor. This is not my code. It is *our* code, comrade.
 
 ## Roadmap
 
