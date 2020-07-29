@@ -36,7 +36,7 @@ There is one function in the core library named `generate` which will produce a 
 ```
 ## What's it doing?
 
-The entropy gernation technique is ~~ripped off~~ *inspired* by keybase's [more-entropy](https://github.com/keybase/more-entropy) js library.  The library runs a sequence of floating point operations in a given time limit, generating a random integer based off the number of successful operations.  Wheras other techniques involve connecting to the DOM to collect entropy through user events, this technique relies on the entropy state of the machine a la linux's `/dev/random`.
+The entropy generation technique is ~~ripped off~~ *inspired* by keybase's [more-entropy](https://github.com/keybase/more-entropy) js library.  The library runs a sequence of floating point operations in a given time limit, generating a random integer based off the number of successful operations.  Whereas other client-side techniques involve connecting to the DOM to collect entropy through user events, this technique is more platform-agnostic and relies on the entropy state of the machine a la linux's `/dev/random`.
 
 ## Should I use this to bootstrap my new crypto startup?
 
