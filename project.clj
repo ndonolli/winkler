@@ -1,4 +1,4 @@
-(defproject imaginathansoft/winkler "0.1.0"
+(defproject imaginathansoft/winkler "0.1.1"
   :description "A moderately paranoid clojurescript library for generating more entropy."
   :url "https://github.com/ndonolli/winkler"
 
@@ -13,4 +13,4 @@
                             :sign-releases false}}
 
   :source-paths
-  ["src/winkler"])
+  ["src"])

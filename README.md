@@ -25,6 +25,8 @@ git clone https://github.com/ndonolli/winkler.git
 There is one function in the core library named `generate` which will produce a lazy-seq of randomized integers. The sequence will produce until the total bits of entropy is greater than the provided argument amount.
 
 ```clojure
+(require '[winkler.core :refer [generate]])
+
 ;; generate random integers with at least 100 bits of combined entropy
 (generate 100) ;; => (1134 -419 16631 -2872 ...)
 
