@@ -30,6 +30,3 @@
                      (>= (+ entropy (* 2 max-bits)) harvested)))
        true (map first)
        true (rest)))))
-
-(comment
-  (count (generate :entropy 100)))
