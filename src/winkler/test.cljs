@@ -11,4 +11,4 @@
                   (map #(calc-entropy (- (last %) (first %))))
                   (reduce +)))]
       (doseq [n-bits (map (partial * 100) (range 6))]
-        (is (>= (total-entropy (generate n-bits)) n-bits))))))
+        (is (>= (total-entropy (generate :entropy n-bits)) n-bits))))))

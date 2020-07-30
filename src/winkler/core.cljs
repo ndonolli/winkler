@@ -16,19 +16,20 @@
    ;; Although lazy, each take does require running timed computations in order to calculate entropy values.
    ```
    "
-  ([& {:keys [entropy max-bits]
-       :or {entropy nil
-            max-bits (:max-bits DEFAULT)}}]
-   (cond->> (collect-entropy max-bits)
-     true
-     (reductions (fn [[_ harvested] [delta _ entropy]]
-                   [delta (+ harvested entropy)])
-                 [0 0])
-     entropy
-     (take-while (fn [[_ harvested]]
-                   (>= (+ entropy (* 2 max-bits)) harvested)))
-     true (map first)
-     true (rest))))
+  ([& opts]
+   (let [{:keys [entropy max-bits]
+          :or {entropy nil
+               max-bits (:max-bits DEFAULT)}} (apply hash-map opts)]
+     (cond->> (collect-entropy max-bits)
+       true
+       (reductions (fn [[_ harvested] [delta _ entropy]]
+                     [delta (+ harvested entropy)])
+                   [0 0])
+       entropy
+       (take-while (fn [[_ harvested]]
+                     (>= (+ entropy (* 2 max-bits)) harvested)))
+       true (map first)
+       true (rest)))))
 
 (comment
-  (take 9 (generate)))
+  (count (generate :entropy 100)))
