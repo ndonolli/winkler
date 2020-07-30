@@ -28,12 +28,12 @@ There is one function in the core namespace named `generate` which will produce 
 ```clojure
 (require '[winkler.core :refer [generate]])
 
-;; Generate random integers with at least 100 bits of combined entropy
-(generate 100) ;; => (1134 -419 16631 -2872 ...)
+;;; Generate random integers with at least 100 bits of combined entropy
+(generate :entropy 100) ;; => (1134 -419 16631 -2872 ...)
 
-;; It's a lazy seq, so take as you will.  An argument is still required as a safeguard for infinite generation.
-;; Each take does require running computations in order to calculate entropy values.
-(take 3 (generate 100)) ;; => (5081 -1092 -4678)
+;; Without any arguments, `generate` will produce infinitely. So take precautions:
+(take 3 (generate)) ;; => (5081 -1092 -4678)
+;; Although lazy, each take does require running timed computations in order to calculate entropy values.
 ```
 ## What's it doing?
 
