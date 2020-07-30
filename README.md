@@ -7,12 +7,12 @@ A moderately paranoid clojurescript library for generating more entropy. You may
 
 With Leinengen/Boot:
 ```
-[imaginathansoft/winkler "0.1.1"]
+[imaginathansoft/winkler "0.2.0"]
 ```
 
 With deps.edn:
 ```
-imaginathansoft/winkler {:mvn/version "0.1.1"}
+imaginathansoft/winkler {:mvn/version "0.2.0"}
 ```
 
 To build from source, run in the terminal:
