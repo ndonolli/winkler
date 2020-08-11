@@ -2,7 +2,8 @@
   (:require [winkler.utils :refer [floor log log2 sqrt abs sin rrest] :as u]))
 
 (defonce DEFAULT {:max-bits 4
-                  :bit-limit 100})
+                  :work-min 1
+                  :entropy nil})
 
 (defn ms-count
   "Returns the number of floating point operations executed in the time limit provided in the argument (in ms)."
@@ -17,7 +18,7 @@
              (-> (+ i x) log sqrt sin)))))
 
 (defn calc-entropy
-  "Calculates bits of entropy given a delta value.  Takes a numerical delta value and a max-bit amount."
+  "Calculates bits of entropy given a delta value.  Takes a numerical delta value and an optional max-bit amount."
   ([delta] (calc-entropy delta (:max-bits DEFAULT)))
   ([delta max-bits]
    (-> (log2 (abs delta))
@@ -27,13 +28,14 @@
 
 (defn collect-entropy
   "Returns a lazy-seq of generated entropy data. Each element is a 3-tuple consisting of [delta value entropy]"
-  ([] (collect-entropy (:max-bits DEFAULT)))
-  ([max-bits]
-   (rrest
-    (iterate
-     (fn [[_ last-val _]]
-       (let [value (ms-count 1)
-             delta (- value last-val)
-             entropy (calc-entropy delta max-bits)]
-         [delta value entropy]))
-     [nil nil nil]))))
+  ([] (collect-entropy DEFAULT))
+  ([opts]
+   (let [{:keys [max-bits work-min]} (merge DEFAULT opts)]
+     (rrest
+      (iterate
+       (fn [[_ last-val _]]
+         (let [value (ms-count work-min)
+               delta (- value last-val)
+               entropy (calc-entropy delta max-bits)]
+           [delta value entropy]))
+       [nil nil nil])))))

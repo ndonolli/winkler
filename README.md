@@ -3,9 +3,11 @@
 
 A moderately paranoid clojurescript library for generating more entropy. You may need a cryptographically secure RNG but who knows if it's enough.  This is just some extra salt.
 
+[Overkill demo using dice](https://winkler-demo.netlify.app/)
+
 ## Installation
 
-With Leinengen/Boot:
+With Leinengen/Boot/shadow-cljs:
 ```
 [imaginathansoft/winkler "0.2.0"]
 ```
