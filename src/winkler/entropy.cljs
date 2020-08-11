@@ -18,12 +18,13 @@
              (-> (+ i x) log sqrt sin)))))
 
 (defn calc-entropy
-  "Calculates bits of entropy given a delta value.  Takes a numerical delta value and a max-bit amount."
-  [delta max-bits]
-  (-> (log2 (abs delta))
-      (dec) (floor)
-      (max 0)
-      (min max-bits)))
+  "Calculates bits of entropy given a delta value.  Takes a numerical delta value and an optional max-bit amount."
+  ([delta] (calc-entropy delta (:max-bits DEFAULT)))
+  ([delta max-bits]
+   (-> (log2 (abs delta))
+       (dec) (floor)
+       (max 0)
+       (min max-bits))))
 
 (defn collect-entropy
   "Returns a lazy-seq of generated entropy data. Each element is a 3-tuple consisting of [delta value entropy]"
