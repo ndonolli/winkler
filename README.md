@@ -9,12 +9,12 @@ A moderately paranoid clojurescript library for generating more entropy. You may
 
 With Leinengen/Boot/shadow-cljs:
 ```
-[imaginathansoft/winkler "0.3.0"]
+[imaginathansoft/winkler "0.3.1"]
 ```
 
 With deps.edn:
 ```
-imaginathansoft/winkler {:mvn/version "0.3.0"}
+imaginathansoft/winkler {:mvn/version "0.3.1"}
 ```
 
 To build from source, run in the terminal:
@@ -35,12 +35,12 @@ Generate random integers with at least 200 bits of combined entropy
 ```clojure
 (generate {:entropy 200}) ;; => (1134 -419 16631 -2872 ...)
 ```
-Without any arguments, `generate` will produce infinitely. So take precautions:
+As of version 0.3.0, `generate` will no longer produce infinitely.  It will instead take until the provided `:entropy` value is harvested.  This value can be changed via the options and it is still possible to `take` from the sequence.
 ```clojure
 (take 3 (generate)) ;; => (5081 -1092 -4678)
 ```
 
-Although lazy, each `take` does require running timed computations in order to calculate entropy values. The default time spent on each calculation loop, the limit of bits to harvest, and other options are implicitly called with the generate function.  You can, however, override these details in the `opts` parameter:
+Although lazy, each take does require running timed computations in order to calculate entropy values. The default time spent on each calculation loop, the limit of bits to harvest, and other options are implicitly called with the generate function.  You can, however, override these details in the `opts` parameter:
 - `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default 100).
 - `:max-bits` - max entropy value allowed per generation (default 4).
 - `:work-min` - minimum time period (in ms) per each loop of operation crunching (default 1).
@@ -58,7 +58,7 @@ One option is to use `generate-promise`, which you can provide a callback for. F
 Keep in mind, in this case the first parameter option map is required.  You can pass an empty map to use defaults.
 
 Alternatively, you can use `generate-async` which will return a channel from which you can asynchronously take from. This allows you to be more flexible with coordination, but will require 
-you to also require the core.async dependency:
+you to also require the `core.async` dependency:
 ```clojure
 (ns my.test
   (:require [winkler.core :refer [generate-async]]
