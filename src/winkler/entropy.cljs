@@ -18,6 +18,11 @@
              (inc i)
              (-> (+ i x) log sqrt sin)))))
 
+(defn under-harvest-limit?
+  "Returns a boolean whether the harvested bits do not exceed the entropy limit"
+  [entropy max-bits harvested]
+  (>= (+ entropy (* 2.5 max-bits)) harvested))
+
 (defn calc-entropy
   "Calculates bits of entropy given a delta value.  Takes a numerical delta value and an optional max-bit amount."
   ([delta] (calc-entropy delta (:max-bits DEFAULT)))
@@ -40,3 +45,4 @@
                entropy (calc-entropy delta max-bits)]
            [delta value entropy]))
        [nil nil nil])))))
+

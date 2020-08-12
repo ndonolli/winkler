@@ -1,7 +1,8 @@
 (ns winkler.core
-  (:require [winkler.entropy :refer [DEFAULT collect-entropy ms-count calc-entropy]]
+  (:require [winkler.entropy :refer
+             [DEFAULT collect-entropy ms-count calc-entropy under-harvest-limit?]]
             [winkler.utils :refer [create-promise]]
-            [clojure.core.async :refer [go-loop chan close! >!] :as a]))
+            [clojure.core.async :refer [go-loop chan close! >! <!]]))
 
 (defn generate
   "Returns a lazy sequence of integers with increasing bits of entropy. Can optionally provide additional options map:
@@ -26,7 +27,7 @@
                         [delta (+ harvested bits)])
                       [0 0])
           (take-while (fn [[_ harvested]]
-                        (>= (+ entropy (* 2 max-bits)) harvested)))
+                        (under-harvest-limit? entropy max-bits harvested)))
           (map first)
           (rest)))))
 
@@ -72,8 +73,7 @@
        (let [value (ms-count work-min)
              delta (- value last-val)
              bits (calc-entropy delta)]
-         (tap> harvested)
-         (if (>= (+ entropy (* 2 max-bits)) harvested)
+         (if (under-harvest-limit? entropy max-bits harvested)
            (do (when last-val (>! entropies delta))
                (recur value (+ bits harvested)))
            (close! entropies))))
