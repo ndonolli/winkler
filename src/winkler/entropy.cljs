@@ -3,7 +3,8 @@
 
 (defonce DEFAULT {:max-bits 4
                   :work-min 1
-                  :entropy nil})
+                  :entropy 100
+                  :callback nil})
 
 (defn ms-count
   "Returns the number of floating point operations executed in the time limit provided in the argument (in ms)."

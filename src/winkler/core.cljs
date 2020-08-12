@@ -1,5 +1,7 @@
 (ns winkler.core
-  (:require [winkler.entropy :refer [DEFAULT collect-entropy]]))
+  (:require [winkler.entropy :refer [DEFAULT collect-entropy]]
+            [winkler.utils :refer [defer]]
+            [clojure.core.async :as a]))
 
 (defn generate
   "Returns a lazy sequence of integers with increasing bits of entropy. Can optionally provide additional options map:
@@ -15,18 +17,32 @@
    ;; Without any arguments, `generate` will produce infinitely. So take precautions:
    (take 3 (generate)) ;; => (5081 -1092 -4678)
    ;; Although lazy, each take does require running timed computations in order to calculate entropy values.
-   ```
-
-  ([] (generate DEFAULT))"
+   ```"
+  ([] (generate DEFAULT))
   ([opts]
-   (let [{:keys [max-bits entropy] :as opts*} (merge DEFAULT opts)]
-     (cond->> (collect-entropy opts*)
-       true
-       (reductions (fn [[_ harvested] [delta _ entropy]]
-                     [delta (+ harvested entropy)])
-                   [0 0])
-       entropy
-       (take-while (fn [[_ harvested]]
-                     (>= (+ entropy (* 2 max-bits)) harvested)))
-       true (map first)
-       true (rest)))))
+   (let [{:keys [max-bits entropy callback] :as opts*} (merge DEFAULT opts)
+         entropies (->> (collect-entropy opts*)
+                        (reductions (fn [[_ harvested] [delta _ entropy]]
+                                      [delta (+ harvested entropy)])
+                                    [0 0])
+                        (take-while (fn [[_ harvested]]
+                                      (>= (+ entropy (* 2 max-bits)) harvested)))
+                        (map first)
+                        (rest))]
+     (if callback
+       (defer entropies callback)
+       entropies))))
+
+(comment
+  (do
+    (take 3 (generate {:work-min 1 :entropy 100 :callback #(println %)}))
+    (println "doesn't block")))
+
+;;  (let [ch (a/to-chan! (take 3 (generate {:work-min 1000})))]
+;;    (a/go-loop []
+;;      (if-let [d (a/<! ch)]
+;;        (do
+;;          (println d)
+;;          (recur))))
+;;    (println "doing")
+;;    (println "other stuff"))

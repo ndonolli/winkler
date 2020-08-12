@@ -29,3 +29,7 @@
 (defn rrest
   "Calls (rest ..) twice on a sequence"
   [s] (rest (rest s)))
+
+(defn defer [f cb]
+  (-> (js/Promise. (fn [res] (js/setTimeout #(res f) 0)))
+      (.then #(cb %))))
