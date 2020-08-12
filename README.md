@@ -31,9 +31,9 @@ Require the core namespace to use `generate` which will produce a lazy-seq of ra
 (require '[winkler.core :refer [generate]])
 ```
 
-Generate random integers with at least 100 bits of combined entropy
+Generate random integers with at least 200 bits of combined entropy
 ```clojure
-(generate {:entropy 100}) ;; => (1134 -419 16631 -2872 ...)
+(generate {:entropy 200}) ;; => (1134 -419 16631 -2872 ...)
 ```
 Without any arguments, `generate` will produce infinitely. So take precautions:
 ```clojure
