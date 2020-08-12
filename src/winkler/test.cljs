@@ -20,19 +20,19 @@
   (testing "integer sequence contains total entropy of a high bit-limit"
     (async done
            (generate-promise
-            {:entropy 1000}
+            {:entropy 2000}
             (fn [result]
-              (is (>= (total-entropy result) 1000))
+              (is (>= (total-entropy result) 2000))
               (done))))))
 
 (deftest generate-async-test
   (testing "integer sequence contains total entropy of a high bit-limit"
     (async done
-           (let [ch (generate-async {:entropy 1000})]
+           (let [ch (generate-async {:entropy 2000})]
              (go-loop [result (seq [])]
                (if-let [entropy (<! ch)]
                  (recur (cons entropy result))
-                 (do (is (>= (total-entropy result) 1000))
+                 (do (is (>= (total-entropy result) 2000))
                      (done))))))))
 
 

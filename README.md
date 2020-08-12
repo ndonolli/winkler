@@ -41,16 +41,16 @@ Without any arguments, `generate` will produce infinitely. So take precautions:
 ```
 
 Although lazy, each `take` does require running timed computations in order to calculate entropy values. The default time spent on each calculation loop, the limit of bits to harvest, and other options are implicitly called with the generate function.  You can, however, override these details in the `opts` parameter:
-- `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default nil).
+- `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default 100).
 - `:max-bits` - max entropy value allowed per generation (default 4).
 - `:work-min` - minimum time period (in ms) per each loop of operation crunching (default 1).
 - `:buffer` - channel buffer size when utilizing `generate-async`, explained below. (default 10).
 
 `generate` should cover most use-cases, and its lazy evaluation allows you to be flexible on when each potentially costly bit generation step is realized.  For cases where more entropy or time is needed, the core namespace provides async methods to help with blocking.
 
-One option is to use `generate-promise`, which you can provide a callback for. For example, here we print the random interger sequence for a large combined entropy amount (1000):
+One option is to use `generate-promise`, which you can provide a callback for. For example, here we print the random interger sequence for a large combined entropy amount (2000):
 ```clojure
-(generate-promise {:entropy 1000} println)
+(generate-promise {:entropy 2000} println)
 (println "Look ma, no blocking!") 
 ;; => "Look ma, no blocking!"
 ;; => (1134 -419 16631 -2872 ...)
@@ -64,7 +64,7 @@ you to also require the core.async dependency:
   (:require [winkler.core :refer [generate-async]]
             [clojure.core.async :as a]))
 
-(let [ch (generate-async {:entropy 1000})]
+(let [ch (generate-async {:entropy 2000})]
 (a/go-loop []
     (if-let [entropy (a/<! ch)]
     (do (println entropy)

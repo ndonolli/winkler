@@ -7,7 +7,7 @@
 (defn generate
   "Returns a lazy sequence of integers with increasing bits of entropy. Can optionally provide additional options map:
 
-   - `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default nil).
+   - `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default 100).
    - `:max-bits` - max entropy value allowed per generation (default 4).
    - `:work-min` - minimum time period (in ms) per each loop of operation crunching (default 1).
 
@@ -36,7 +36,7 @@
 
    An options map argument is required, but may be empty:
 
-   - `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default nil).
+   - `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default 100).
    - `:max-bits` - max entropy value allowed per generation (default 4).
    - `:work-min` - minimum time period (in ms) per each loop of operation crunching (default 1).
 
@@ -51,7 +51,7 @@
 (defn generate-async
   "Returns a core.async channel of integers with increasing bits of entropy. Channel will close upon reaching the end of the generation sequence. Best used if a high work-min or entropy amount is required, as this may noticably block the main thread. Can optionally provide additional options map:
 
-   - `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default nil).
+   - `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default 100).
    - `:max-bits` - max entropy value allowed per generation (default 4).
    - `:work-min` - minimum time period (in ms) per each loop of operation crunching (default 1).
    - `:buffer` - channel buffer size (default 10).
