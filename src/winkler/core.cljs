@@ -57,7 +57,7 @@
    - `:buffer` - channel buffer size (default 10).
 
    ```clojure
-   ;; Asynchronously print random integers with at least 1000 (!) bits of combiend entropy
+   ;; Asynchronously print random integers with at least 1000 (!) bits of combined entropy
    (let [ch (generate-async {:entropy 1000})]
     (go-loop []
       (if-let [entropy (<! ch)]
