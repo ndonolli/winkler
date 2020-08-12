@@ -3,6 +3,8 @@
 
  :dependencies [[org.clojure/core.async "1.3.610"]]
 
+ :devtools {:preloads [shadow.remote.runtime.cljs.browser]}
+
  :builds {:lib {:target :node-library
                 :output-to "dist/main.js"
                 :exports-var winkler.core/generate

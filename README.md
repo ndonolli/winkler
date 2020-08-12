@@ -9,12 +9,12 @@ A moderately paranoid clojurescript library for generating more entropy. You may
 
 With Leinengen/Boot/shadow-cljs:
 ```
-[imaginathansoft/winkler "0.2.0"]
+[imaginathansoft/winkler "0.3.0"]
 ```
 
 With deps.edn:
 ```
-imaginathansoft/winkler {:mvn/version "0.2.0"}
+imaginathansoft/winkler {:mvn/version "0.3.0"}
 ```
 
 To build from source, run in the terminal:
@@ -25,18 +25,53 @@ git clone https://github.com/ndonolli/winkler.git
 
 ## Usage
 
-There is one function in the core namespace named `generate` which will produce a lazy-seq of randomized integers. The sequence will produce until the total bits of entropy is greater than the provided argument amount.
+Require the core namespace to use `generate` which will produce a lazy-seq of randomized integers. The sequence will produce until the total bits of entropy is greater than the provided argument amount.
 
 ```clojure
 (require '[winkler.core :refer [generate]])
-
-;;; Generate random integers with at least 100 bits of combined entropy
-(generate :entropy 100) ;; => (1134 -419 16631 -2872 ...)
-
-;; Without any arguments, `generate` will produce infinitely. So take precautions:
-(take 3 (generate)) ;; => (5081 -1092 -4678)
-;; Although lazy, each take does require running timed computations in order to calculate entropy values.
 ```
+
+Generate random integers with at least 200 bits of combined entropy
+```clojure
+(generate {:entropy 200}) ;; => (1134 -419 16631 -2872 ...)
+```
+Without any arguments, `generate` will produce infinitely. So take precautions:
+```clojure
+(take 3 (generate)) ;; => (5081 -1092 -4678)
+```
+
+Although lazy, each `take` does require running timed computations in order to calculate entropy values. The default time spent on each calculation loop, the limit of bits to harvest, and other options are implicitly called with the generate function.  You can, however, override these details in the `opts` parameter:
+- `:entropy` - takes from the sequence until the combined entropy is at least the given amount (default 100).
+- `:max-bits` - max entropy value allowed per generation (default 4).
+- `:work-min` - minimum time period (in ms) per each loop of operation crunching (default 1).
+- `:buffer` - channel buffer size when utilizing `generate-async`, explained below. (default 10).
+
+`generate` should cover most use-cases, and its lazy evaluation allows you to be flexible on when each potentially costly bit generation step is realized.  For cases where more entropy or time is needed, the core namespace provides async methods to help with blocking.
+
+One option is to use `generate-promise`, which you can provide a callback for. For example, here we print the random interger sequence for a large combined entropy amount (2000):
+```clojure
+(generate-promise {:entropy 2000} println)
+(println "Look ma, no blocking!") 
+;; => "Look ma, no blocking!"
+;; => (1134 -419 16631 -2872 ...)
+```
+Keep in mind, in this case the first parameter option map is required.  You can pass an empty map to use defaults.
+
+Alternatively, you can use `generate-async` which will return a channel from which you can asynchronously take from. This allows you to be more flexible with coordination, but will require 
+you to also require the core.async dependency:
+```clojure
+(ns my.test
+  (:require [winkler.core :refer [generate-async]]
+            [clojure.core.async :as a]))
+
+(let [ch (generate-async {:entropy 2000})]
+(a/go-loop []
+    (if-let [entropy (a/<! ch)]
+    (do (println entropy)
+        (recur)))))
+```
+The channel will close once the harvest limit is reached.
+
 ## What's it doing?
 
 The entropy generation technique is ~~ripped off~~ *inspired* by keybase's [more-entropy](https://github.com/keybase/more-entropy) js library.  The library runs a sequence of floating point operations in a given time limit, generating a random integer based off the number of successful operations.  Whereas other client-side techniques involve connecting to the DOM to collect entropy through user events, this technique is more platform-agnostic and relies on the entropy state of the machine a la linux's `/dev/random`.
@@ -55,10 +90,5 @@ Open an issue, talk it out, open a pull request, and bear the fruits of your lab
 
 ## Roadmap
 
-1. Develop non-blocking versions of the generator using `core.async`. The core generator is fine for most use-cases (and lazy!) but an async version would suit for longer sequences.
-2. Migrate files to .cljc for full compatability with Clojure as well. 
-3. (Maybe?) Build and publish this library on npm to allow integration with other JS projects. Shadow-cljs provides great tools on this front, however some work is needed as this is still a purely clojurescript project. 
-
-## Licence
-
-winkler is [MIT licenced](license.txt)
+1. Migrate files to .cljc for full compatability with Clojure as well. 
+2. (Maybe?) Build and publish this library on npm to allow integration with other JS projects. Shadow-cljs provides great tools on this front, however some work is needed as this is still a purely clojurescript project. 
