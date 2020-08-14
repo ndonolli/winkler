@@ -65,7 +65,7 @@ you to also require the `core.async` dependency:
             [clojure.core.async :as a]))
 
 (let [ch (generate-async {:entropy 2000})]
-(a/go-loop []
+  (a/go-loop []
     (if-let [entropy (a/<! ch)]
     (do (println entropy)
         (recur)))))
