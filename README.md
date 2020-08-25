@@ -5,6 +5,8 @@ A moderately paranoid clojurescript library for generating more entropy. You may
 
 [Overkill demo using dice](https://winkler-demo.netlify.app/)
 
+[Rationale and other thoughts](https://imaginathan.space/posts/the-fairest-d20-in-all-the-land/)
+
 ## Installation
 
 With Leinengen/Boot/shadow-cljs:
