@@ -1,11 +1,13 @@
-# winkler
-[![Clojars Project](https://img.shields.io/clojars/v/imaginathansoft/winkler.svg)](https://clojars.org/imaginathansoft/winkler)
+<img src="winkler_logo.png" alt="drawing" width="500"/>
 
 A moderately paranoid clojurescript library for generating more entropy. You may need a cryptographically secure RNG but who knows if it's enough.  This is just some extra salt.
+
+[![Clojars Project](https://img.shields.io/clojars/v/imaginathansoft/winkler.svg)](https://clojars.org/imaginathansoft/winkler)
 
 [Overkill demo using dice](https://winkler-demo.netlify.app/)
 
 [Rationale and other thoughts](https://imaginathan.space/posts/the-fairest-d20-in-all-the-land/)
+
 
 ## Installation
 
